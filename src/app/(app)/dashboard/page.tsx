@@ -133,10 +133,10 @@ export default async function DashboardPage() {
               <div>
                 <p className="text-sm font-medium">{evaluation.person.name}</p>
               </div>
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="secondary" className="text-xs">
                 {evaluation.person.specialty.name}
               </Badge>
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="secondary" className="text-xs">
                 {evaluation.person.level.name}
               </Badge>
 
