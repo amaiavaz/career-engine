@@ -5,11 +5,6 @@ import { PieChart, Pie, Legend, ResponsiveContainer, Sector } from 'recharts';
 interface Props {
   data: { name: string; value: number; color: string }[];
 }
-interface LegendEntry {
-  payload: {
-    value: number;
-  };
-}
 
 export default function SpecialtyChart({ data }: Props) {
   return (
@@ -54,12 +49,22 @@ export default function SpecialtyChart({ data }: Props) {
           }}
         />
         <Legend
-          formatter={(value, entry) => {
-            const typed = entry as unknown as LegendEntry;
-            return `${value} (${typed.payload.value})`;
-          }}
-          iconType="circle"
-          iconSize={8}
+          content={() => (
+            <ul className="flex flex-wrap gap-x-4 gap-y-1 justify-center mt-2">
+              {data.map((entry) => (
+                <li
+                  key={entry.name}
+                  className="flex items-center gap-1.5 text-xs"
+                >
+                  <span
+                    className="inline-block w-2 h-2 rounded-full"
+                    style={{ backgroundColor: entry.color }}
+                  />
+                  {entry.name} ({entry.value})
+                </li>
+              ))}
+            </ul>
+          )}
         />
       </PieChart>
     </ResponsiveContainer>
