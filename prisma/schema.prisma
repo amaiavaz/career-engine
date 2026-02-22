@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      Role     @default(VIEWER)
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  VIEWER
+}
+
+model Specialty {
+  id     String   @id @default(cuid())
+  name   String
+  color  String
+  people Person[]
+}
+
+model Level {
+  id     String   @id @default(cuid())
+  name   String
+  order  Int
+  people Person[]
+}
+
+model Person {
+  id          String       @id @default(cuid())
+  name        String
+  email       String       @unique
+  specialtyId String
+  levelId     String
+  evaluatorId String?
+  createdAt   DateTime     @default(now())
+  specialty   Specialty    @relation(fields: [specialtyId], references: [id])
+  level       Level        @relation(fields: [levelId], references: [id])
+  evaluator   Person?      @relation("PersonEvaluator", fields: [evaluatorId], references: [id])
+  evaluees    Person[]     @relation("PersonEvaluator")
+  evaluations Evaluation[]
+}
+
+model Evaluation {
+  id       String           @id @default(cuid())
+  personId String
+  date     DateTime         @default(now())
+  score    Float
+  status   EvaluationStatus @default(PENDING)
+  person   Person           @relation(fields: [personId], references: [id])
+}
+
+enum EvaluationStatus {
+  PENDING
+  COMPLETED
+}
